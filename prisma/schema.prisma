@@ -18,10 +18,10 @@ model SocialButton {
 }
 
 model Page {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   userId    String
-  username  String @unique
-  logoImage String
+  username  String  @unique
+  logoImage String?
 
   socialButtons SocialButton[]
 
