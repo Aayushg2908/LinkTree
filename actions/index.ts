@@ -46,3 +46,52 @@ export const getUserLinkTrees = async () => {
 
   return page;
 };
+
+export const updateUsername = async (
+  initialUsername: string,
+  username: string
+) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const existingUsername = await db.page.findFirst({
+    where: {
+      username: username,
+    },
+  });
+  if (existingUsername) {
+    return null;
+  }
+
+  const page = await db.page.update({
+    where: {
+      userId,
+      username: initialUsername,
+    },
+    data: {
+      username,
+    },
+  });
+
+  revalidatePath("/admin");
+
+  return page.username;
+};
+
+export const deleteLinkTree = async (username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  await db.page.delete({
+    where: {
+      userId,
+      username,
+    },
+  });
+
+  revalidatePath("/admin");
+};

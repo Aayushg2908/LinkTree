@@ -3,7 +3,7 @@ import { CreateLinkTree } from "./_components/CreateLinkTree";
 import Image from "next/image";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
-import { IoEllipsisHorizontalSharp } from "react-icons/io5";
+import Actions from "./_components/Actions";
 
 const AdminPage = async () => {
   const linktrees = await getUserLinkTrees();
@@ -18,12 +18,14 @@ const AdminPage = async () => {
           <div className="w-full mt-10 flex flex-col items-center gap-y-4">
             <CreateLinkTree />
             {linktrees.map((linktree) => (
-              <Link
-                href={`/private/${linktree.username}`}
-                className="max-w-2xl w-full bg-white h-16 flex justify-between items-center shadow-sm hover:shadow-md rounded-lg p-3"
+              <div
+                className="max-w-2xl w-full bg-white h-16 flex justify-between items-center shadow-md hover:shadow-lg transition-all rounded-lg p-3"
                 key={linktree.id}
               >
-                <div className="flex items-center gap-x-2">
+                <Link
+                  href={`/private/${linktree.username}`}
+                  className="flex items-center gap-x-2"
+                >
                   <Image
                     src={linktree.logoImage || "/tree.png"}
                     alt="userImage"
@@ -33,11 +35,9 @@ const AdminPage = async () => {
                   />
                   <Separator orientation="vertical" className="h-16" />
                   <div className="font-bold">@{linktree.username}</div>
-                </div>
-                <div className="mr-2">
-                  <IoEllipsisHorizontalSharp />
-                </div>
-              </Link>
+                </Link>
+                <Actions username={linktree.username} />
+              </div>
             ))}
           </div>
         ) : (

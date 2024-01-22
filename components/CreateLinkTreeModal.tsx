@@ -9,19 +9,27 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Input } from "./ui/input";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useUser } from "@clerk/nextjs";
 import { toast } from "sonner";
-import { createPage } from "@/actions";
+import { createPage, updateUsername } from "@/actions";
 import { useRouter } from "next/navigation";
 
 export const CreateLinkTreeModal = () => {
   const router = useRouter();
   const { user } = useUser();
-  const [username, setUsername] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { isOpen, onClose } = useCreateLinktreeModal();
+  const {
+    username: existingUsername,
+    isOpen,
+    onClose,
+  } = useCreateLinktreeModal();
+  const [username, setUsername] = useState(existingUsername);
+
+  useEffect(() => {
+    setUsername(existingUsername);
+  }, [existingUsername]);
 
   const handleClick = async () => {
     if (username === "") {
@@ -34,13 +42,26 @@ export const CreateLinkTreeModal = () => {
       } else {
         try {
           setIsLoading(true);
-          const page = await createPage(username);
-          if (!page) {
-            toast.error("Username already taken");
+          if (existingUsername) {
+            const updatedUsername = await updateUsername(
+              existingUsername,
+              username
+            );
+            if (!updatedUsername) {
+              toast.error("Username already taken");
+            } else {
+              toast.success(`Username updated to ${updatedUsername}`);
+              onClose();
+            }
           } else {
-            toast.success(`You claimed ${username} username`);
-            onClose();
-            router.push(`/private/${username}`);
+            const page = await createPage(username);
+            if (!page) {
+              toast.error("Username already taken");
+            } else {
+              toast.success(`You claimed ${username} username`);
+              onClose();
+              router.push(`/private/${username}`);
+            }
           }
         } catch (error: any) {
           toast.error(error);
@@ -56,9 +77,13 @@ export const CreateLinkTreeModal = () => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create LinkTree</DialogTitle>
+          <DialogTitle>
+            {existingUsername ? "Update Username" : "Create LinkTree"}
+          </DialogTitle>
           <DialogDescription>
-            Create a unique username for your LinkTree
+            {existingUsername
+              ? "Update your username"
+              : "Create a unique username for your LinkTree"}
           </DialogDescription>
         </DialogHeader>
         <Input
@@ -73,7 +98,7 @@ export const CreateLinkTreeModal = () => {
           disabled={isLoading}
           className="rounded-full bg-purple-700 hover:bg-purple-600"
         >
-          Claim your LinkTree
+          {existingUsername ? "Update username" : "Claim your LinkTree"}
         </Button>
       </DialogContent>
     </Dialog>
