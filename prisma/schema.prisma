@@ -31,8 +31,9 @@ model Page {
 }
 
 model Link {
-  id  String @id @default(cuid())
-  url String
+  id    String @id @default(cuid())
+  url   String
+  order Int
 
   pageId String
   page   Page   @relation(fields: [pageId], references: [id])

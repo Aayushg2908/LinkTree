@@ -43,7 +43,7 @@ const AdminPage = async () => {
         ) : (
           <>
             <p className="text-xl mt-10">
-              You don&apos;t own any LinkTree&apos;s. Create One!
+              You don&apos;t own any LinkTree. Create One!
             </p>
             <CreateLinkTree />
           </>
