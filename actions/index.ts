@@ -2,6 +2,7 @@
 
 import { db } from "@/lib/db";
 import { auth } from "@clerk/nextjs";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 export const createPage = async (username: string) => {
@@ -23,6 +24,23 @@ export const createPage = async (username: string) => {
     data: {
       userId,
       username,
+    },
+  });
+
+  revalidatePath("/admin");
+
+  return page;
+};
+
+export const getUserLinkTrees = async () => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findMany({
+    where: {
+      userId,
     },
   });
 
