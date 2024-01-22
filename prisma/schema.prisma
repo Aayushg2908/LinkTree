@@ -7,3 +7,37 @@ datasource db {
   url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
+
+model SocialButton {
+  id   String @id @default(cuid())
+  type String
+
+  page Page[]
+
+  createdAt DateTime @default(now())
+}
+
+model Page {
+  id        String @id @default(cuid())
+  userId    String
+  username  String @unique
+  logoImage String
+
+  socialButtons SocialButton[]
+
+  links Link[]
+
+  createdAt DateTime @default(now())
+}
+
+model Link {
+  id  String @id @default(cuid())
+  url String
+
+  pageId String
+  page   Page   @relation(fields: [pageId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([pageId])
+}
