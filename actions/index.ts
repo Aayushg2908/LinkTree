@@ -163,3 +163,55 @@ export const createLink = async (
 
   revalidatePath(`/private/${username}`);
 };
+
+export const getLinks = async (username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+    include: {
+      links: {
+        orderBy: {
+          createdAt: "asc",
+        },
+      },
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  return page.links;
+};
+
+export const deleteLink = async (id: string, username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  await db.link.delete({
+    where: {
+      id,
+      pageId: page.id,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
+};
