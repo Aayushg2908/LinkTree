@@ -1,9 +1,11 @@
 "use server";
 
 import { db } from "@/lib/db";
+import { createLinkSchema } from "@/lib/validations";
 import { auth } from "@clerk/nextjs";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export const createPage = async (username: string) => {
   const { userId } = auth();
@@ -106,7 +108,58 @@ export const getPageByUsername = async (username: string) => {
     where: {
       username,
     },
+    include: {
+      links: true,
+      socialButtons: true,
+    },
   });
 
   return page;
+};
+
+export const createLink = async (
+  values: z.infer<typeof createLinkSchema>,
+  username: string
+) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const { name, url } = values;
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  const lastOrder = await db.link.findFirst({
+    where: {
+      pageId: page.id,
+    },
+    orderBy: {
+      order: "desc",
+    },
+    select: {
+      order: true,
+    },
+  });
+
+  const newOrder = lastOrder ? lastOrder.order + 1 : 0;
+
+  await db.link.create({
+    data: {
+      name,
+      url,
+      pageId: page.id,
+      order: newOrder,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
 };

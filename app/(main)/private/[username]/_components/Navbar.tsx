@@ -8,7 +8,7 @@ import Link from "next/link";
 export const Navbar = ({ username }: { username: string }) => {
   return (
     <>
-      <div className="sticky top-0 sm:top-4 w-full flex items-center justify-between bg-white h-16 sm:rounded-full px-8 transition-all sm:shadow-md max-sm:border-b">
+      <div className="z-30 sticky top-0 sm:top-3 w-full flex items-center justify-between bg-white h-16 sm:rounded-full px-8 transition-all sm:shadow-md max-sm:border-b">
         <div className="flex gap-8 items-center">
           <Link href="/admin">
             <Image
