@@ -178,7 +178,7 @@ export const getLinks = async (username: string) => {
     include: {
       links: {
         orderBy: {
-          createdAt: "asc",
+          order: "asc",
         },
       },
     },
@@ -210,6 +210,46 @@ export const deleteLink = async (id: string, username: string) => {
     where: {
       id,
       pageId: page.id,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
+};
+
+export const updateName = async (
+  name: string,
+  id: string,
+  username: string
+) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  await db.link.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
+};
+
+export const updateUrl = async (url: string, id: string, username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  await db.link.update({
+    where: {
+      id,
+    },
+    data: {
+      url,
     },
   });
 

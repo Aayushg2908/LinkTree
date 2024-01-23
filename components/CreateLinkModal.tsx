@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -69,6 +70,7 @@ export const CreateLinkModal = () => {
                   <FormLabel>Name</FormLabel>
                   <FormControl>
                     <Input
+                      className="rounded-full"
                       placeholder="Enter the name for your link"
                       {...field}
                     />
@@ -85,10 +87,14 @@ export const CreateLinkModal = () => {
                   <FormLabel>Enter URL</FormLabel>
                   <FormControl>
                     <Input
+                      className="rounded-full"
                       placeholder="Enter the URL of your link"
                       {...field}
                     />
                   </FormControl>
+                  <FormDescription className="text-purple-600">
+                    Please Enter the complete URL with https://
+                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
