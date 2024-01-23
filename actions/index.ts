@@ -3,6 +3,7 @@
 import { db } from "@/lib/db";
 import { createLinkSchema } from "@/lib/validations";
 import { auth } from "@clerk/nextjs";
+import { Link } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -254,4 +255,38 @@ export const updateUrl = async (url: string, id: string, username: string) => {
   });
 
   revalidatePath(`/private/${username}`);
+};
+
+export const updateOrder = async (links: Link[], username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  const updateLinks = links.map((link) =>
+    db.link.update({
+      where: {
+        id: link.id,
+      },
+      data: {
+        order: link.order,
+      },
+    })
+  );
+
+  const updatedLinks = await db.$transaction(updateLinks);
+
+  revalidatePath(`/private/${username}`);
+
+  return updatedLinks;
 };

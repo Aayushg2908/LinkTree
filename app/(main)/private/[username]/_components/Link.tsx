@@ -1,3 +1,5 @@
+"use client";
+
 import { Link as PrismaLink } from "@prisma/client";
 import {
   EditIcon,
@@ -12,13 +14,16 @@ import { toast } from "sonner";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Draggable } from "@hello-pangea/dnd";
 
 export const LinkCard = ({
   link,
   username,
+  index,
 }: {
   link: PrismaLink;
   username: string;
+  index: number;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isUpdatingLink, setIsUpdatingLink] = useState(false);
@@ -77,90 +82,95 @@ export const LinkCard = ({
     toast.loading("Deleting link...");
   }
   return (
-    <div
-      key={link.id}
-      className="bg-white h-[150px] w-full lg:w-[550px] rounded-3xl flex items-center justify-between px-4 shadow-md transition-all"
-    >
-      <div>
-        <GripVertical className="cursor-pointer" />
-      </div>
-      <div className="flex flex-col items-center gap-y-1">
-        {isEditingName ? (
-          <div className="flex items-center gap-x-1">
-            <Input
-              value={changedName}
-              onChange={(e) => setChangedName(e.target.value)}
-              className="rounded-full border-none"
-            />
-            <XCircle
-              className="w-8 h-8 cursor-pointer"
-              onClick={() => setIsEditingName(false)}
-            />
-            <Button
-              disabled={isUpdatingLink}
-              onClick={() => handleUpdateName(changedName)}
-              size="sm"
-              className="rounded-full bg-purple-700 hover:bg-purple-600"
-            >
-              Save
-            </Button>
+    <Draggable draggableId={link.id} index={index}>
+      {(provided) => (
+        <div
+          {...provided.draggableProps}
+          ref={provided.innerRef}
+          className="bg-white h-[150px] w-full lg:w-[550px] rounded-3xl flex items-center justify-between px-4 shadow-md transition-all"
+        >
+          <div {...provided.dragHandleProps}>
+            <GripVertical className="cursor-pointer" />
           </div>
-        ) : (
-          <h1 className="font-bold text-xl flex items-center gap-x-3 line-clamp-1">
-            {link.name}
-            <EditIcon
-              onClick={() => {
-                setIsEditingUrl(false);
-                setIsEditingName(true);
-              }}
-              className="w-4 h-4 cursor-pointer"
-            />
-          </h1>
-        )}
-        {isEditingUrl ? (
-          <div className="flex items-center gap-x-1">
-            <Input
-              value={changedUrl}
-              onChange={(e) => setChangedUrl(e.target.value)}
-              className="rounded-full border-none"
-            />
-            <XCircle
-              className="w-8 h-8 cursor-pointer"
-              onClick={() => setIsEditingUrl(false)}
-            />
-            <Button
-              disabled={isUpdatingLink}
-              onClick={() => handleUpdateUrl(changedUrl)}
-              size="sm"
-              className="rounded-full bg-purple-700 hover:bg-purple-600"
-            >
-              Save
-            </Button>
+          <div className="flex flex-col items-center gap-y-1">
+            {isEditingName ? (
+              <div className="flex items-center gap-x-1">
+                <Input
+                  value={changedName}
+                  onChange={(e) => setChangedName(e.target.value)}
+                  className="rounded-full border-none"
+                />
+                <XCircle
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={() => setIsEditingName(false)}
+                />
+                <Button
+                  disabled={isUpdatingLink}
+                  onClick={() => handleUpdateName(changedName)}
+                  size="sm"
+                  className="rounded-full bg-purple-700 hover:bg-purple-600"
+                >
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <h1 className="font-bold text-xl flex items-center gap-x-3 line-clamp-1">
+                {link.name}
+                <EditIcon
+                  onClick={() => {
+                    setIsEditingUrl(false);
+                    setIsEditingName(true);
+                  }}
+                  className="w-4 h-4 cursor-pointer"
+                />
+              </h1>
+            )}
+            {isEditingUrl ? (
+              <div className="flex items-center gap-x-1">
+                <Input
+                  value={changedUrl}
+                  onChange={(e) => setChangedUrl(e.target.value)}
+                  className="rounded-full border-none"
+                />
+                <XCircle
+                  className="w-8 h-8 cursor-pointer"
+                  onClick={() => setIsEditingUrl(false)}
+                />
+                <Button
+                  disabled={isUpdatingLink}
+                  onClick={() => handleUpdateUrl(changedUrl)}
+                  size="sm"
+                  className="rounded-full bg-purple-700 hover:bg-purple-600"
+                >
+                  Save
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <Link
+                  href={link.url}
+                  target="_blank"
+                  className="font-semibold flex items-center gap-1 text-blue-500"
+                >
+                  <LinkIcon className="w-4 h-4" />{" "}
+                  {link.url.replace("https://", "")}
+                </Link>
+                <EditIcon
+                  onClick={() => {
+                    setIsEditingName(false);
+                    setIsEditingUrl(true);
+                  }}
+                  className="ml-2 w-4 h-4 text-black cursor-pointer"
+                />
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="flex items-center">
-            <Link
-              href={link.url}
-              target="_blank"
-              className="font-semibold flex items-center gap-1 text-blue-500"
-            >
-              <LinkIcon className="w-4 h-4" />{" "}
-              {link.url.replace("https://", "")}
-            </Link>
-            <EditIcon
-              onClick={() => {
-                setIsEditingName(false);
-                setIsEditingUrl(true);
-              }}
-              className="ml-2 w-4 h-4 text-black cursor-pointer"
-            />
-          </div>
-        )}
-      </div>
-      <Trash2
-        onClick={() => handleDelete(link.id)}
-        className="cursor-pointer text-red-500"
-      />
-    </div>
+          <Trash2
+            onClick={() => handleDelete(link.id)}
+            className="cursor-pointer text-red-500"
+          />
+        </div>
+      )}
+    </Draggable>
   );
 };
