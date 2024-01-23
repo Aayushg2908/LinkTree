@@ -14,7 +14,6 @@ export const Links = ({
   links: PrismaLink[];
   username: string;
 }) => {
-  const [allLinks, setAllLinks] = useState<PrismaLink[]>(links);
   const [isMounted, setIsMounted] = useState(false);
 
   const onDragEnd = async (result: any) => {
@@ -31,13 +30,13 @@ export const Links = ({
 
     if (type === "links") {
       if (source.droppableId === destination.droppableId) {
-        const newLinks = [...allLinks];
+        const newLinks = [...links];
         const [removed] = newLinks.splice(source.index, 1);
         newLinks.splice(destination.index, 0, removed);
         newLinks.forEach((link, index) => {
           link.order = index;
         });
-        setAllLinks(newLinks);
+        links = newLinks;
         const updatedLinks = await updateOrder(newLinks, username);
         if (updatedLinks) {
           toast.success("Links reordered successfully");
@@ -63,9 +62,9 @@ export const Links = ({
             {...provided.droppableProps}
             className="px-4 w-full flex flex-col items-center mb-4"
           >
-            {allLinks.length > 0 ? (
+            {links.length > 0 ? (
               <div className="sm:px-4 w-full flex flex-col items-center gap-y-4">
-                {allLinks.map((link, index) => (
+                {links.map((link, index) => (
                   <LinkCard
                     key={link.id}
                     link={link}
