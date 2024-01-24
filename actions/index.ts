@@ -328,3 +328,33 @@ export const updateAppearance = async (values: {
 
   return updatedPage;
 };
+
+export const uploadPageLogo = async (id: string, logoImage: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      id,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  await db.page.update({
+    where: {
+      userId,
+      id,
+    },
+    data: {
+      logoImage,
+    },
+  });
+
+  revalidatePath(`/private/${page.username}`);
+  revalidatePath(`/private/${page.username}/appearace`);
+};

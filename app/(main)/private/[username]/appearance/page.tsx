@@ -15,6 +15,7 @@ const AppearancePage = async ({ params }: { params: { username: string } }) => {
         pageId={page.id}
         username={page.username}
         bio={page.bio}
+        logoImage={page.logoImage}
       />
     </div>
   );
