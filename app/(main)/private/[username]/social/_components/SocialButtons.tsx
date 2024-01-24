@@ -4,6 +4,8 @@ import { SocialButton } from "@prisma/client";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { useEffect, useState } from "react";
 import { SocialButtonCard } from "./SocialButtonCard";
+import { toast } from "sonner";
+import { updateSocialButtonsOrder } from "@/actions";
 
 export const SocialButtons = ({
   socialButtons,
@@ -28,6 +30,27 @@ export const SocialButtons = ({
       destination.index === source.index
     ) {
       return;
+    }
+
+    if (type === "socialButtons") {
+      if (source.droppableId === destination.droppableId) {
+        const newSocialButtons = [...socialButtons];
+        const [removed] = newSocialButtons.splice(source.index, 1);
+        newSocialButtons.splice(destination.index, 0, removed);
+        newSocialButtons.forEach((socialButton, index) => {
+          socialButton.order = index;
+        });
+        socialButtons = newSocialButtons;
+        const updatedSocialButtons = await updateSocialButtonsOrder(
+          newSocialButtons,
+          username
+        );
+        if (updatedSocialButtons) {
+          toast.success("Social Buttons reordered successfully");
+        } else {
+          toast.error("Something went wrong!");
+        }
+      }
     }
   };
 

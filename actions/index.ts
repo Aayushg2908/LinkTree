@@ -3,7 +3,7 @@
 import { db } from "@/lib/db";
 import { createLinkSchema } from "@/lib/validations";
 import { auth } from "@clerk/nextjs";
-import { Link } from "@prisma/client";
+import { Link, SocialButton } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -457,4 +457,42 @@ export const deleteSocialButton = async (id: string, username: string) => {
 
   revalidatePath(`/private/${username}`);
   revalidatePath(`/private/${username}/social`);
+};
+
+export const updateSocialButtonsOrder = async (
+  socialButtons: SocialButton[],
+  username: string
+) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  const updateSocialButtons = socialButtons.map((socialButton) =>
+    db.socialButton.update({
+      where: {
+        id: socialButton.id,
+      },
+      data: {
+        order: socialButton.order,
+      },
+    })
+  );
+
+  const updatedSocialButtons = await db.$transaction(updateSocialButtons);
+
+  revalidatePath(`/private/${username}`);
+  revalidatePath(`/private/${username}/social`);
+
+  return updatedSocialButtons;
 };
