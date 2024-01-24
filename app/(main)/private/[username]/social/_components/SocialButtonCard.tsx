@@ -30,25 +30,29 @@ export const SocialButtonCard = ({
   useEffect(() => {
     switch (socialButton.type) {
       case "TWITTER":
-        setIcon(<FaXTwitter className="text-blue-500 text-4xl" />);
+        setIcon(<FaXTwitter className="text-black text-2xl sm:text-4xl" />);
         break;
       case "GITHUB":
-        setIcon(<FaGithub className="text-gray-500 text-4xl" />);
+        setIcon(<FaGithub className="text-gray-500 text-2xl sm:text-4xl" />);
         break;
       case "LINKEDIN":
-        setIcon(<FaLinkedin className="text-blue-500 text-4xl" />);
+        setIcon(<FaLinkedin className="text-blue-500 text-2xl sm:text-4xl" />);
         break;
       case "INSTAGRAM":
-        setIcon(<AiFillInstagram className="text-pink-500 text-4xl" />);
+        setIcon(
+          <AiFillInstagram className="text-pink-500 text-2xl sm:text-4xl" />
+        );
         break;
       case "YOUTUBE":
-        setIcon(<GrYoutube className="text-red-500 text-4xl" />);
+        setIcon(<GrYoutube className="text-red-500 text-2xl sm:text-4xl" />);
         break;
       case "DISCORD":
-        setIcon(<SiDiscord className="text-blue-500 text-4xl" />);
+        setIcon(<SiDiscord className="text-blue-500 text-2xl sm:text-4xl" />);
         break;
       case "FACEBOOK":
-        setIcon(<FaFacebookSquare className="text-blue-500 text-4xl" />);
+        setIcon(
+          <FaFacebookSquare className="text-blue-500 text-2xl sm:text-4xl" />
+        );
         break;
       default:
         break;
@@ -81,14 +85,14 @@ export const SocialButtonCard = ({
             <GripVertical className="cursor-grab" />
           </div>
           <div className="flex items-center gap-x-2">
-            {Icon}
+            <div className="hidden sm:block">{Icon}</div>
             <Link
               target="_blank"
               href={socialButton.url}
               className="flex gap-x-1 text-blue-500 text-base ml-2"
             >
               <LinkIcon className="w-5 h-5" />
-              {socialButton.url}
+              <p className="line-clamp-1">{socialButton.url}</p>
             </Link>
           </div>
           <Trash2
