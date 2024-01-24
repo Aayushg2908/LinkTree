@@ -9,12 +9,17 @@ datasource db {
 }
 
 model SocialButton {
-  id   String @id @default(cuid())
-  type String
+  id    String @id @default(cuid())
+  type  String
+  url   String
+  order Int    @default(0)
 
-  page Page[]
+  pageId String
+  page   Page   @relation(fields: [pageId], references: [id])
 
   createdAt DateTime @default(now())
+
+  @@index([pageId])
 }
 
 model Page {

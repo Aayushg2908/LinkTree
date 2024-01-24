@@ -81,6 +81,7 @@ export const LinkCard = ({
   if (isLoading) {
     toast.loading("Deleting link...");
   }
+
   return (
     <Draggable draggableId={link.id} index={index}>
       {(provided) => (
@@ -90,7 +91,7 @@ export const LinkCard = ({
           className="bg-white h-[150px] w-full lg:w-[550px] rounded-3xl flex items-center justify-between px-4 shadow-md transition-all"
         >
           <div {...provided.dragHandleProps}>
-            <GripVertical className="cursor-pointer" />
+            <GripVertical className="cursor-grab" />
           </div>
           <div className="flex flex-col items-center gap-y-1">
             {isEditingName ? (

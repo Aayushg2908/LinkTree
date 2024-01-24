@@ -359,13 +359,102 @@ export const uploadPageLogo = async (id: string, logoImage: string) => {
   revalidatePath(`/private/${page.username}/appearace`);
 };
 
-export const getAllSocialButtons = async () => {
+export const createSocialButton = async (
+  username: string,
+  type: string,
+  url: string
+) => {
   const { userId } = auth();
   if (!userId) {
     return redirect("/sign-in");
   }
 
-  const socialButtons = await db.socialButton.findMany({});
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
 
-  return socialButtons;
+  const lastOrder = await db.socialButton.findFirst({
+    where: {
+      pageId: page.id,
+    },
+    orderBy: {
+      order: "desc",
+    },
+    select: {
+      order: true,
+    },
+  });
+
+  const newOrder = lastOrder ? lastOrder.order + 1 : 0;
+
+  await db.socialButton.create({
+    data: {
+      type,
+      url,
+      order: newOrder,
+      pageId: page.id,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
+  revalidatePath(`/private/${username}/social`);
+};
+
+export const getSocialButtons = async (username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+    include: {
+      socialButtons: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  return page.socialButtons;
+};
+
+export const deleteSocialButton = async (id: string, username: string) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      username,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  await db.socialButton.delete({
+    where: {
+      id,
+      pageId: page.id,
+    },
+  });
+
+  revalidatePath(`/private/${username}`);
+  revalidatePath(`/private/${username}/social`);
 };
