@@ -57,7 +57,7 @@ export const SocialButtonCard = ({
       default:
         break;
     }
-  }, []);
+  }, [socialButton.type]);
 
   const handleDelete = async (id: string) => {
     try {

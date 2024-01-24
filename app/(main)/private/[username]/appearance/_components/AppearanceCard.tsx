@@ -51,7 +51,7 @@ export const AppearanceCard = ({
     window.addEventListener("keydown", handleEnter);
 
     return () => window.removeEventListener("keydown", handleEnter);
-  }, [name, pageBio, pageId]);
+  }, [name, pageBio, pageId, router]);
 
   const handleUpload = async (result: any) => {
     try {

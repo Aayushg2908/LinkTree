@@ -63,10 +63,10 @@ export const SocialButtons = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="px-4 w-full flex flex-col items-center mb-4 mt-8"
+            className="px-4 w-full flex flex-col items-center mb-4 mt-8 transition-all"
           >
             {socialButtons.length > 0 ? (
-              <div className="sm:px-4 w-full flex flex-col items-center gap-y-4">
+              <div className="sm:px-4 w-full flex flex-col items-center gap-y-4 transition-all">
                 {socialButtons.map((socialButton, index) => (
                   <SocialButtonCard
                     key={socialButton.id}
