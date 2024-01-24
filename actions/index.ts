@@ -358,3 +358,14 @@ export const uploadPageLogo = async (id: string, logoImage: string) => {
   revalidatePath(`/private/${page.username}`);
   revalidatePath(`/private/${page.username}/appearace`);
 };
+
+export const getAllSocialButtons = async () => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const socialButtons = await db.socialButton.findMany({});
+
+  return socialButtons;
+};

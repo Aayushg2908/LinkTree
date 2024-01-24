@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { CreateLinkTreeModal } from "../CreateLinkTreeModal";
 import { CreateLinkModal } from "../CreateLinkModal";
+import { CreateSocialButtonModal } from "../CreateSocialButtonModal";
 
 const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -17,6 +18,7 @@ const ModalProvider = () => {
     <>
       <CreateLinkTreeModal />
       <CreateLinkModal />
+      <CreateSocialButtonModal />
     </>
   );
 };

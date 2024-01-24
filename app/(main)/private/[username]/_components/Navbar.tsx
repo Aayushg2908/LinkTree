@@ -58,7 +58,7 @@ export const Navbar = ({ username }: { username: string }) => {
         </div>
         <UserButton afterSignOutUrl="/" />
       </div>
-      <div className="sm:hidden flex items-center h-16 justify-around bg-white transition-all">
+      <div className="sm:hidden flex items-center h-16 justify-around bg-white transition-all overflow-x-auto">
         <Link
           className={cn(
             buttonVariants({
