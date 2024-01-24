@@ -290,3 +290,41 @@ export const updateOrder = async (links: Link[], username: string) => {
 
   return updatedLinks;
 };
+
+export const updateAppearance = async (values: {
+  username: string;
+  bio: string;
+  id: string;
+}) => {
+  const { userId } = auth();
+  if (!userId) {
+    return redirect("/sign-in");
+  }
+
+  const { id, ...rest } = values;
+
+  const page = await db.page.findUnique({
+    where: {
+      userId,
+      id,
+    },
+  });
+  if (!page) {
+    throw new Error("Page not found");
+  }
+
+  const updatedPage = await db.page.update({
+    where: {
+      userId,
+      id,
+    },
+    data: {
+      ...rest,
+    },
+  });
+
+  revalidatePath(`/private/${values.username}`);
+  revalidatePath(`/private/${values.username}/appearace`);
+
+  return updatedPage;
+};

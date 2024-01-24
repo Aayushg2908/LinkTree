@@ -27,7 +27,7 @@ const AdminPage = async () => {
                   className="flex items-center gap-x-2"
                 >
                   <Image
-                    src={linktree.logoImage || "/tree.png"}
+                    src="/tree.png"
                     alt="userImage"
                     width={50}
                     height={50}
