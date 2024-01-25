@@ -47,7 +47,7 @@ export const SocialButtonCard = ({
         setIcon(<GrYoutube className="text-red-500 text-2xl sm:text-4xl" />);
         break;
       case "DISCORD":
-        setIcon(<SiDiscord className="text-blue-500 text-2xl sm:text-4xl" />);
+        setIcon(<SiDiscord className="text-purple-500 text-2xl sm:text-4xl" />);
         break;
       case "FACEBOOK":
         setIcon(

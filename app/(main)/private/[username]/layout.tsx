@@ -2,7 +2,8 @@ import { getPageByUsername } from "@/actions";
 import { Navbar } from "./_components/Navbar";
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { Sidebar } from "./_components/Sidebar";
 
 const PrivateLayout = async ({
   children,
@@ -17,6 +18,9 @@ const PrivateLayout = async ({
   }
 
   const page = await getPageByUsername(params.username);
+  if (!page) {
+    return notFound();
+  }
 
   return (
     <div className="w-full min-h-screen">
@@ -28,6 +32,9 @@ const PrivateLayout = async ({
             orientation="vertical"
             className="h-screen z-1 fixed top-0"
           />
+          <div className="w-full flex justify-center">
+            <Sidebar page={page} />
+          </div>
         </div>
       </main>
     </div>

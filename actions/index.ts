@@ -110,8 +110,16 @@ export const getPageByUsername = async (username: string) => {
       username,
     },
     include: {
-      links: true,
-      socialButtons: true,
+      links: {
+        orderBy: {
+          order: "asc",
+        },
+      },
+      socialButtons: {
+        orderBy: {
+          order: "asc",
+        },
+      },
     },
   });
 
