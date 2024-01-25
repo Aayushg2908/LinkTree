@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { auth } from "@clerk/nextjs";
 import { notFound, redirect } from "next/navigation";
 import { Sidebar } from "./_components/Sidebar";
+import { PreviewButton } from "./_components/PreviewButton";
 
 const PrivateLayout = async ({
   children,
@@ -37,6 +38,9 @@ const PrivateLayout = async ({
           </div>
         </div>
       </main>
+      <div className="md:hidden w-full z-50 fixed bottom-5 flex justify-center">
+        <PreviewButton page={page} />
+      </div>
     </div>
   );
 };

@@ -60,7 +60,7 @@ export const Links = ({
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className="px-4 w-full flex flex-col items-center mb-4"
+            className="px-4 w-full flex flex-col items-center mb-10"
           >
             {links.length > 0 ? (
               <div className="sm:px-4 w-full flex flex-col items-center gap-y-4">
