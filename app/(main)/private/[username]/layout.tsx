@@ -36,7 +36,7 @@ const PrivateLayout = async ({
               href={`/public/${params.username}`}
               className="font-bold underline"
             >
-              link-tree-nine-sooty.vercel.app/public/{params.username}
+              aayush-linktree1.vercel.app/public/{params.username}
             </Link>
           </div>
           {children}
