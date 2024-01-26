@@ -101,11 +101,6 @@ export const deleteLinkTree = async (username: string) => {
 };
 
 export const getPageByUsername = async (username: string) => {
-  const { userId } = auth();
-  if (!userId) {
-    return redirect("/sign-in");
-  }
-
   const page = await db.page.findFirst({
     where: {
       username,
