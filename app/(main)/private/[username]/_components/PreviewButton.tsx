@@ -52,9 +52,9 @@ export const PreviewButton = ({
                   key={link.id}
                   href={link.url}
                   target="_blank"
-                  className="bg-neutral-800 rounded-xl w-full h-[50px] hover:scale-110 shadow-md transition-all flex items-center justify-center"
+                  className="bg-neutral-800 rounded-xl w-full h-[50px] hover:scale-110 shadow-md transition-all flex items-center justify-center px-4"
                 >
-                  <h1 className="font-bold text-base text-white">
+                  <h1 className="font-bold text-base text-white line-clamp-1">
                     {link.name}
                   </h1>
                 </Link>

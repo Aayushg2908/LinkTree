@@ -5,6 +5,7 @@ import { auth } from "@clerk/nextjs";
 import { notFound, redirect } from "next/navigation";
 import { Sidebar } from "./_components/Sidebar";
 import { PreviewButton } from "./_components/PreviewButton";
+import Link from "next/link";
 
 const PrivateLayout = async ({
   children,
@@ -27,7 +28,19 @@ const PrivateLayout = async ({
     <div className="w-full min-h-screen">
       <Navbar username={params.username} />
       <main className="w-full h-full flex">
-        <div className="w-full md:w-3/5 overflow-y-auto">{children}</div>
+        <div className="w-full md:w-3/5 overflow-y-auto">
+          <div className="bg-blue-300 rounded-full my-8 mx-4 p-4 h-[50px] flex items-center gap-x-2 max-sm:flex-col max-sm:h-[70px] max-sm:justify-center">
+            <p className="ml-2">Your LinkTree:</p>
+            <Link
+              target="_blank"
+              href={`/public/${params.username}`}
+              className="font-bold underline"
+            >
+              localhost:3000/public/{params.username}
+            </Link>
+          </div>
+          {children}
+        </div>
         <div className="max-md:hidden w-2/5 h-full">
           <Separator
             orientation="vertical"
