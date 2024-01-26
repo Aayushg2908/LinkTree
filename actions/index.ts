@@ -79,6 +79,7 @@ export const updateUsername = async (
   });
 
   revalidatePath("/admin");
+  revalidatePath(`/private/${username}/appearance`);
 
   return page.username;
 };
