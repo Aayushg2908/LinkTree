@@ -24,6 +24,7 @@ export const AppearanceCard = ({
   const [isMounted, setIsMounted] = useState(false);
   const [name, setName] = useState(username);
   const [pageBio, setPageBio] = useState(bio || "");
+  const [isSaving, setIsSaving] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -31,27 +32,22 @@ export const AppearanceCard = ({
     return () => setIsMounted(false);
   }, []);
 
-  useEffect(() => {
-    const handleEnter = async (e: KeyboardEvent) => {
-      if (e.key === "Enter") {
-        try {
-          const updatedPage = await updateAppearance({
-            bio: pageBio,
-            username: name,
-            id: pageId,
-          });
-          toast.success("Appearance Updated!");
-          router.replace(`/private/${updatedPage.username}/appearance`);
-        } catch (error) {
-          toast.error("Something went wrong!");
-        }
-      }
-    };
-
-    window.addEventListener("keydown", handleEnter);
-
-    return () => window.removeEventListener("keydown", handleEnter);
-  }, [name, pageBio, pageId, router]);
+  const handleSave = async () => {
+    try {
+      setIsSaving(true);
+      const updatedPage = await updateAppearance({
+        bio: pageBio,
+        username: name,
+        id: pageId,
+      });
+      toast.success("Appearance Updated!");
+      router.replace(`/private/${updatedPage.username}/appearance`);
+    } catch (error) {
+      toast.error("Something went wrong!");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleUpload = async (result: any) => {
     try {
@@ -116,6 +112,13 @@ export const AppearanceCard = ({
           onChange={(e) => setPageBio(e.target.value)}
         />
       )}
+      <Button
+        disabled={isSaving}
+        onClick={handleSave}
+        className="w-full rounded-full bg-purple-600 hover:bg-purple-500 h-10 text-white flex items-center justify-center"
+      >
+        Save
+      </Button>
     </div>
   );
 };
